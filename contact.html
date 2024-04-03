@@ -5,12 +5,38 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body> 
-    <h1>Dit is een valide HTML pagina voor contact naar Florian.</h1>
     <ul>
         <li><a href="index.html">HOME</a></li>
         <li><a href="about.html">ABOUT</a></li>
         <li><a href="contact.html">CONTACT</a></li>
     </ul>
+
+    <h1>Het Contactformulier</h1>
+    <p>Neem contact op:</p>
+    <form>
+        <label for="contact">Aanhef: </label>
+        <select id="gender" name="contact">
+            <option value="woman">Mevr.</option>
+            <option value="man">Dhr.</option>
+            <option value="nonbinary">Non-binair.</option>
+            <option value="decline">Zeg ik liever niet.</option>
+        </select>
+        <label for="fullname"><br>Voor- en achternaam: </label><input type="text" id="fullname" placeholder="Marie Jansen">
+        <label for="email"><br>Mailadres: </label><input type="email" id="email" placeholder="voorbeeld@mail.com">
+        <label for="phonenumber"><br>Telefoonnummer: </label><input type="tel" id="phonenumber" placeholder="+316 12345678">
+        <label for="street"><br>Straat: </label><input type="text" id="street" placeholder="Voorbeeldstraat">
+        <label for="housingnumber"><br>Huisnummer + toevoeging: </label><input type="number" id="housingnumber" placeholder="1"><label for ="addition"> + </label><input type="text" id="addition" placeholder="A"> 
+        <label for="postalcode"><br>Postcode: </label><input type="text" id="postalcode" placeholder="1234AB">
+        <label for="municipality"><br>Gemeente: </label><input type="text" id="municipality" placeholder="">
+
+        <p>Communicatie voorkeur, via:</p>
+        <input type="radio" name="communicationpref" id="email" value="Email"><label for="email">Email</label><br>
+        <input type="radio" name="communicationpref" id="tel" value="Telefoon"><label for="tel">Telefoon</label><br>
+        <input type="radio" name="communicationpref" id="mail" value="Post"><label for="mail">Post</label><br>
+
+        <label for="message"><br>Uw bericht:<br></label><textarea id="message" rows="10" cols="60" placeholder="Typ hier uw bericht..."></textarea><br><br>
+        <input type="submit" value="Verzenden">
+    </form>
 
     <footer>
         <p>&#169; Florian van der Steen 2024<br></p>

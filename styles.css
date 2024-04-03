@@ -5,3 +5,12 @@ table, th, td {
 
 td:hover {background-color: grey;}
 th:hover {background-color: lightblue;}
+
+ul {
+    list-style-type:disc;
+}
+
+#profiel-foto {
+    width: 300px;
+    height: 400px;
+}
