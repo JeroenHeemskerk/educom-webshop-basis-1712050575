@@ -3,18 +3,20 @@
     <title>Contact</title>
     <link rel="icon" type="svg" href="online-form-icon.svg">
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans"">
 </head>
 <body> 
-    <ul>
+    <h1>Formulierensite</h1>
+    <ul class="navbar">
         <li><a href="index.html">HOME</a></li>
         <li><a href="about.html">ABOUT</a></li>
         <li><a href="contact.html">CONTACT</a></li>
     </ul>
 
-    <h1>Het Contactformulier</h1>
-    <p>Neem contact op:</p>
+    <h2>Het Contactformulier</h2>
     <form>
-        <label for="contact">Aanhef: </label>
+        <p>Neem contact op:</p>
+        <label for="gender">Aanhef: </label>
         <select id="gender" name="contact">
             <option value="woman">Mevr.</option>
             <option value="man">Dhr.</option>
@@ -25,9 +27,10 @@
         <label for="email"><br>Mailadres: </label><input type="email" id="email" placeholder="voorbeeld@mail.com">
         <label for="phonenumber"><br>Telefoonnummer: </label><input type="tel" id="phonenumber" placeholder="+316 12345678">
         <label for="street"><br>Straat: </label><input type="text" id="street" placeholder="Voorbeeldstraat">
-        <label for="housingnumber"><br>Huisnummer + toevoeging: </label><input type="number" id="housingnumber" placeholder="1"><label for ="addition"> + </label><input type="text" id="addition" placeholder="A"> 
+        <label for="housingnumber"><br>Huisnummer: </label><input type="number" id="housingnumber" placeholder="1">
+        <label for ="addition"><br>Toevoeging: </label><input type="text" id="addition" placeholder="A"> 
         <label for="postalcode"><br>Postcode: </label><input type="text" id="postalcode" placeholder="1234AB">
-        <label for="municipality"><br>Gemeente: </label><input type="text" id="municipality" placeholder="">
+        <label for="municipality"><br>Gemeente: </label><input type="text" id="municipality" placeholder="Utrecht">
 
         <p>Communicatie voorkeur, via:</p>
         <input type="radio" name="communicationpref" id="email" value="Email"><label for="email">Email</label><br>

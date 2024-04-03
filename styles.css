@@ -1,16 +1,63 @@
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
+body {
+    width: 800px;
+    margin: auto;
+}
 
-td:hover {background-color: grey;}
-th:hover {background-color: lightblue;}
+h1 {
+    font-size: 48px;
+    text-align: center;
+    font-family: Merriweather, serif;
+}
 
-ul {
-    list-style-type:disc;
+h2 {
+    font-family: Merriweather, serif;
+}
+
+ul.navbar {
+    list-style-type: none;
+    background-color: rgb(106, 187, 213);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+ul.navbar li > a {
+    border-style: solid;
+    border-width: 2px;
+    border-color: lightgreen;
+    color: white;
+    padding: 0px 8px;
+    text-decoration: none;
+}
+
+.content {
+    background-color: white;
+    color: grey;
+    font-size: 12px;
+    font-family: "Open Sans", sans-serif;
+}
+
+/*Moet hier dan ook weer .content voor staan?*/
+.content a, a:visited {
+    color: inherit;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    font-size: 10px;
+    float: right;
+}
+
+form {
+    font-family:  "Open Sans", sans-serif;
+}
+
+input[type=text], input[type=number], input[type=email], select, textarea {
+    width: 400px;
 }
 
 #profiel-foto {
-    width: 300px;
-    height: 400px;
+    width: 150px;
+    height: 200px;
 }
