@@ -37,7 +37,6 @@ ul.navbar li > a {
     font-family: "Open Sans", sans-serif;
 }
 
-/*Moet hier dan ook weer .content voor staan?*/
 .content a, .content a:visited {
     color: inherit;
 }

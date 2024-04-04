@@ -5,6 +5,73 @@
     <link rel="stylesheet" type="text/css" href="CSS/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans"">
 </head>
+<?php 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $aanhef = $_POST["gender"];
+    $name = $_POST["fullname"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $street = $_POST["street"];
+    $housenumber = $_POST["housingnumber"];
+    $house_add = $_POST["addition"];
+    $postalcode = $_POST["postalcode"];
+    $municip = $_POST["gemeente"];
+    $comm = $_POST["communicationpref"];
+    $msg = $_POST["message"];
+
+    $valid = True;
+
+    if ($aanhef == "--") {
+        global $gender_error;
+        $gender_error = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
+        $valid = False;
+    }
+
+    if (empty($name)) {
+        global $name_error;
+        $name_error = "Vul alsjeblieft je volledige naam in.";
+        $valid = False;
+    }
+
+    else if (strlen(ctype_alpha($name)) < 1) {
+        global $name_error;  
+        $name_error = "Vul alsjeblieft een naam in met minstens 1 letter.";
+        $valid = False;
+
+    if (empty($bericht)) {
+        global $bericht_error;
+        $bericht_error = "Vul alsjeblieft een bericht in.";
+        $valid = False;
+    }
+
+    switch ($comm) {
+        case empty($comm):
+            global $comm_error;
+            $comm_error = "Vul alsjeblieft je communicatievoorkeur in.";
+            $valid = False;
+            break;
+        
+        case $comm == "Email":
+            global $comm_error;
+            list($valid, $comm_error) = handle_email();
+            break;
+
+        case $comm == "Telefoon":
+            global $comm_error;
+            list($valid, $comm_error) = handle_phone();
+            break;
+    
+        case $comm == "Post":
+            global $comm_error;
+            list($valid, $comm_error) = handle_post();
+            break;
+    }
+}
+
+}
+
+    // moet ik afhandelen als er een get request wordt gestuurd?
+?>
 <body> 
     <h1>Formulierensite</h1>
     <ul class="navbar">
@@ -14,7 +81,7 @@
     </ul>
 
     <h2>Het Contactformulier</h2>
-    <form action=">
+    <form method="POST" action="contact.php">
         <p>Neem contact op:</p>
         <label for="gender">Aanhef: </label>
         <select id="gender" name="contact">
