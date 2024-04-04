@@ -38,7 +38,7 @@ ul.navbar li > a {
 }
 
 /*Moet hier dan ook weer .content voor staan?*/
-.content a, a:visited {
+.content a, .content a:visited {
     color: inherit;
 }
 
