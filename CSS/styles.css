@@ -41,6 +41,10 @@ ul.navbar li > a {
     color: inherit;
 }
 
+.error {
+    color: red;
+}
+
 footer {
     background-color: black;
     color: white;
