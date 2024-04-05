@@ -67,23 +67,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email_error = "Vul alsjeblieft een geldig emailadres in.";
     }
 
-    if (!empty($phone) && !ctype_digit($phone)) {
+    if (empty($phone)) {
+        $phone_error = "Vul alsjeblieft een telefoonnummer in. ";
+    }
+    else if (!ctype_digit($phone)) {
         $phone_error = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
     }
 
-    $post_error = handle_post($street, $housenumber, $postalcode, $municip);
+    $post_error = handle_post($comm, $street, $housenumber, $postalcode, $municip);
 
     $valid = empty($gender_error) && empty($name_error) && empty($email_error) && empty($bericht_error) && empty($comm_error) && empty($email_error) && empty($phone_error) && empty($post_error);
 }
 
-function handle_post($street, $housenumber, $postalcode, $municip) {
-    # zodat we empty() niet meerdere keren aanroepen
+function handle_post($comm, $street, $housenumber, $postalcode, $municip) {
+    # To avoid calling empty twice per var.
     $street_flag = empty($street);
     $housenumber_flag = empty($housenumber);
     $postalcode_flag = empty($postalcode);
     $municip_flag = empty($municip);
 
-    if ($street_flag && $housenumber_flag && $postalcode_flag && $municip_flag) {
+    if ($comm != "Post" && $street_flag && $housenumber_flag && $postalcode_flag && $municip_flag) {
         return "";
     }
     if ($street_flag) {
@@ -118,9 +121,9 @@ function handle_post($street, $housenumber, $postalcode, $municip) {
     <?php if (!$valid) { /* Show the next part only when $valid is false */ ?>
         <form method="POST" action="contact.php">
             <p>Neem contact op:</p>
-            <label for="gender">gender: </label>
+            <label for="gender">Aanhef: </label>
             <select id="gender" name="gender" value="<?php echo $gender; ?>">
-                <option value="--" >--</option>
+                <option value="--">--</option>
                 <option value="Mevr." <?php if ($gender == "Mevr.") {echo "selected";} ?>>Mevr.</option>
                 <option value="Dhr." <?php if ($gender == "Dhr.") {echo "selected";} ?>>Dhr.</option>
                 <option value="Dhr. / Mevr." <?php if ($gender == "Dhr. / Mevr.") {echo "selected";} ?>>Dhr. / Mevr.</option>
@@ -133,17 +136,17 @@ function handle_post($street, $housenumber, $postalcode, $municip) {
             <span class="error">* <?php echo $name_error; ?></span>
 
             <label for="email"><br>Mailadres: </label><input type="email" id="email" name="email" value="<?php echo $email; ?>" placeholder="voorbeeld@mail.com">
-            <span class="error"><?php if (isset($email_error)) {echo "*" . $email_error;} ?></span>
+            <span class="error"><?php if (!empty($email_error)) {echo "*" . $email_error;} ?></span>
 
             <label for="phonenumber"><br>Telefoonnummer: </label><input type="tel" id="phonenumber" name="phonenumber" value="<?php echo $phone; ?>" placeholder="0612345678">
-            <span class="error"><?php if (isset($phone_error)) {echo "*" . $phone_error;} ?></span>
+            <span class="error"><?php if (!empty($phone_error)) {echo "* " . $phone_error;} ?></span>
 
             <label for="street"><br>Straat: </label><input type="text" id="street" name="street" value="<?php echo $street; ?>" placeholder="Voorbeeldstraat">
             <label for="housenumber"><br>Huisnummer: </label><input type="number" id="housenumber" name="housenumber" value="<?php echo $housenumber; ?>" placeholder="1">
             <label for ="addition"><br>Toevoeging: </label><input type="text" id="addition" name="addition" value="<?php echo $house_add; ?>" placeholder="A">
             <label for="postalcode"><br>Postcode: </label><input type="text" id="postalcode" name="postalcode" value="<?php echo $postalcode; ?>" placeholder="1234AB">
             <label for="municipality"><br>Gemeente: </label><input type="text" id="municipality" name="municipality" value="<?php echo $municip; ?>" placeholder="Utrecht">
-            <span class="error"><?php if (isset($post_error)) {echo "*" . $post_error;} ?></span>
+            <span class="error"><?php if (!empty($post_error)) {echo "* " . $post_error;} ?></span>
 
             <p>Communicatie voorkeur, via: <span class="error">* <?php echo $comm_error; ?></span></p>
             <input type="radio" name="communicationpref" id="email" <?php if (isset($comm) && $comm=="Email") echo "checked";?> value="Email"><label for="email">Email</label><br>
@@ -163,11 +166,10 @@ function handle_post($street, $housenumber, $postalcode, $municip) {
         <?php if (!empty($email)) { ?>
         <div>Email: <?php echo $email; ?></div>
         <?php } ?>
-
         <?php 
         // At this point, either all are filled in, or none. So only one check required.
         if (!empty($street)) { ?>
-        <div>Adres: <?php echo $street; echo "," . $housenumber . $house_add;?></div>
+        <div>Adres: <?php echo $street; echo " " . $housenumber . $house_add;?></div>
         <div>Woonplaats: <?php echo $postalcode . ", " . $municip; ?></div>
         <div>Communicatievoorkeur: <?php echo $comm; ?></div>
             <?php } ?>
