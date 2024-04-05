@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $bericht = $_POST["message"];
 
     if ($gender == "--") {
-        $gender_error = "Vul alsjeblieft je gendervoorkeur in of geef aan dat je dit liever niet laat weten.";
+        $gender_error = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
     }
 
     if (empty($name)) {
@@ -67,10 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email_error = "Vul alsjeblieft een geldig emailadres in.";
     }
 
-    if (empty($phone)) {
+    if ($comm == "Telefoon" && empty($phone)) {
         $phone_error = "Vul alsjeblieft een telefoonnummer in. ";
     }
-    else if (!ctype_digit($phone)) {
+    else if (!empty($phone) && ctype_digit($phone)) {
         $phone_error = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
     }
 
