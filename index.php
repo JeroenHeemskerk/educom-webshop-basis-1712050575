@@ -44,8 +44,12 @@ function showHeader($page) {
         case "about":
             echo "<title>About</title>";
             break;
-        default:
+        case "home":
             echo "<title>Home</title>";
+            break;
+        default:
+            echo "<title>Page Not Found</title>";
+
     }
             
     echo '<link rel="icon" type="svg" href="Images/online-form-icon.svg">';
@@ -89,9 +93,14 @@ function showContent($page) {
             }
             break;
 
-        default:
+        case "home":
             require('home.php');
             showHomeContent();
+            break;
+
+        default:
+            require('error404.php');
+            show404Content();
     }
 }
 
