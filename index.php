@@ -82,7 +82,7 @@ function showContent($page) {
             require('contact.php');
             [$valid, $values, $errors] = validateContact();
             if ($valid) {
-                showThanks($values);
+                showContactThanks($values);
             }
             else {
                 showContactContent($values, $errors);
@@ -107,5 +107,3 @@ function showFooter() {
     <p>&copy; Florian van der Steen 2024<br></p>
     </footer>';
 }
-
-?>

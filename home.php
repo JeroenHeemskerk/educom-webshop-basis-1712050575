@@ -6,4 +6,3 @@ function showHomeContent() {
 
     <p class="content"><strong>Meer features zijn onderweg!</strong> Maar voor nu, geniet van de <b>rust</b> op deze website. </p>'; 
 }
-?>

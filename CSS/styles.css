@@ -56,13 +56,13 @@ form {
     font-family:  "Open Sans", sans-serif;
 }
 
- input, select, textarea { 
-     width: 400px; 
- } 
+input, select, textarea { 
+    width: 400px; 
+} 
 
- input[type=radio], input[type=submit] { 
-     width: auto; 
- } 
+input[type=radio], input[type=submit] { 
+    width: auto; 
+} 
 
 #profiel-foto {
     width: 150px;
