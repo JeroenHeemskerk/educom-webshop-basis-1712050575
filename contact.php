@@ -1,5 +1,9 @@
 <?php 
 
+function getContactTitle() {
+    return "Contact";
+}
+
 function validateContact() {
     $valid = false;
     $errors = array("gender_error"=>"", "name_error"=>"", "msg_error"=>"", 

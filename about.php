@@ -1,4 +1,8 @@
 <?php 
+function getAboutTitle() {
+    return "About";
+}
+
 function showAboutContent() {
     echo '<h2>Over Florian van der Steen</h2>
     <img alt="ProfielFotoFlorian" id="profiel-foto" src="Images/Klein072.JPG">

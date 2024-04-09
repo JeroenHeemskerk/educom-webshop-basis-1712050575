@@ -35,23 +35,27 @@ function beginDocument() {
 }
 
 function showHeader($page) {
-    echo "<head>";
+    echo "<head><title>";
 
     switch ($page) {
         case "contact":
-            echo "<title>Contact</title>";
+            include_once('contact.php');
+            echo getContactTitle();
             break;
         case "about":
-            echo "<title>About</title>";
+            include_once('about.php');
+            echo getAboutTitle();
             break;
         case "home":
-            echo "<title>Home</title>";
+            include_once('home.php');
+            echo getHomeTitle();
             break;
         default:
-            echo "<title>Page Not Found</title>";
+            include_once('error404.php');
+            echo get404Title();
 
     }
-            
+    echo "</title>";    
     echo '<link rel="icon" type="svg" href="Images/online-form-icon.svg">';
     echo '<link rel="stylesheet" type="text/css" href="CSS/styles.css">';
     echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans">';
@@ -78,12 +82,12 @@ function showNavBar() {
 function showContent($page) {
     switch ($page) {
         case "about":
-            require('about.php');
+            include_once('about.php');
             showAboutContent();
             break;
 
         case "contact":
-            require('contact.php');
+            include_once('contact.php');
             [$valid, $values, $errors] = validateContact();
             if ($valid) {
                 showContactThanks($values);
@@ -94,12 +98,12 @@ function showContent($page) {
             break;
 
         case "home":
-            require('home.php');
+            include_once('home.php');
             showHomeContent();
             break;
 
         default:
-            require('error404.php');
+            include_once('error404.php');
             show404Content();
     }
 }

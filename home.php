@@ -1,4 +1,8 @@
 <?php 
+function getHomeTitle() {
+    return "Home";
+}
+
 function showHomeContent() {
     echo '
     <h2>Welkom</h2>
