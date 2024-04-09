@@ -94,10 +94,13 @@ function validateContact() {
         $valid = empty($errors["gender_error"]) && empty($errors["name_error"])  && empty($errors["msg_error"]) && empty($errors["comm_error"]) && empty($errors["email_error"]) && empty($errors["phone_error"]) && empty($errors["post_error"]);
     }
 
-    return [$valid, $values, $errors];
+    return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 }
 
-function showContactContent ($values, $errors) {
+function showContactContent ($vald_vals_errs) {
+    $values = $vald_vals_errs["values"];
+    $errors = $vald_vals_errs["errors"];
+
     echo "<h2>Het Contactformulier</h2>";
     echo '<form method="POST" action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">
         <p>Neem contact op:</p>
@@ -139,7 +142,9 @@ function showContactContent ($values, $errors) {
     </form>';
 } 
         
-function showContactThanks($values) {
+function showContactThanks($vald_vals_errors) {
+    $values = $vald_vals_errors["values"];
+    
     echo '<p>Bedankt, ' . $values["name"] . ', voor je reactie:</p>
     <div>Aanhef: ' . $values["gender"] . '</div>
     <div>Naam: ' . $values["name"] . '</div>';

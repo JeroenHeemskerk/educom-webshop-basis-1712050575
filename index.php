@@ -104,12 +104,12 @@ function showContent($page) {
 
         case "contact":
             include_once('contact.php');
-            [$valid, $values, $errors] = validateContact();
-            if ($valid) {
-                showContactThanks($values);
+            $vald_vals_errors = validateContact();
+            if ($vald_vals_errors["valid"]) {
+                showContactThanks($vald_vals_errors);
             }
             else {
-                showContactContent($values, $errors);
+                showContactContent($vald_vals_errors);
             }
             break;
 
