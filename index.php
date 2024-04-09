@@ -29,6 +29,22 @@ function getGetPage($key, $default="home") {
     return isset($value) ? $value : $default;
 }
 
+
+function getPostVar($key, $filter="string", $default="") 
+{ 
+
+    if ($filter == "string") {
+        $value = filter_input(INPUT_POST, htmlspecialchars($key));
+    }
+
+    else {
+        $value = filter_input(INPUT_POST, $key, $filter); 
+    }
+    
+    return isset($value) ? $value : $default; 
+
+}
+
 function beginDocument() {
     echo '<!doctype html> 
     <html>'; 

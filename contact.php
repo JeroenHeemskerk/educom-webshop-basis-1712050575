@@ -4,6 +4,8 @@ function getContactTitle() {
     return "Contact";
 }
 
+include_once('index.php');
+
 function validateContact() {
     $valid = false;
     $errors = array("gender_error"=>"", "name_error"=>"", "msg_error"=>"", 
@@ -12,16 +14,16 @@ function validateContact() {
     $values = array("gender"=>"--", "name"=>"", "email"=>"", "phone"=>"", "street"=>"", "housenumber"=>"", "house_add"=>"", "postalcode"=>"", "municip"=>"", "msg"=>"", "comm"=>"");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $values["gender"] = $_POST["gender"];
-        $values["name"] = $_POST["fullname"];
-        $values["email"] = $_POST["email"];
-        $values["phone"] = $_POST["phonenumber"];
-        $values["street"] = $_POST["street"];
-        $values["housenumber"] = $_POST["housenumber"];
-        $values["house_add"] = $_POST["addition"];
-        $values["postalcode"] = $_POST["postalcode"];
-        $values["municip"] = $_POST["municipality"];
-        $values["msg"] = $_POST["message"];
+        $values["gender"] = getPostVar("gender");
+        $values["name"] =  getPostVar("fullname");
+        $values["email"] =  getPostVar("email", FILTER_SANITIZE_EMAIL);
+        $values["phone"] =  getPostVar("phonenumber");
+        $values["street"] =  getPostVar("street");
+        $values["housenumber"] =  getPostVar("housenumber");
+        $values["house_add"] =  getPostVar("addition");
+        $values["postalcode"] =  getPostVar("postalcode");
+        $values["municip"] =  getPostVar("municipality");
+        $values["msg"] =  getPostVar("message");
 
         if ($values["gender"] == "--") {
             $errors["gender_error"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
@@ -38,12 +40,12 @@ function validateContact() {
             $errors["msg_error"] = "Vul alsjeblieft een bericht in.";
         }
         
-        if (empty($_POST["communicationpref"])) {
+        if (empty(getPostVar("communicationpref"))) {
             $errors["comm_error"] = "Vul alsjeblieft je communicatievoorkeur in.";
         }
 
         else {
-            $values["comm"] = $_POST["communicationpref"];
+            $values["comm"] = getPostVar("communicationpref");
         }
 
         if ($values["comm"] == "Email" && !filter_var($values["email"], FILTER_VALIDATE_EMAIL)) {
@@ -97,7 +99,7 @@ function validateContact() {
 
 function showContactContent ($values, $errors) {
     echo "<h2>Het Contactformulier</h2>";
-    echo '<form method="POST" action="index.php">
+    echo '<form method="POST" action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">
         <p>Neem contact op:</p>
         <label for="gender">Aanhef: </label>
         <select id="gender" name="gender" value="'. $values["gender"] . ' ">
