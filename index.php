@@ -47,6 +47,10 @@ function showHeader($page) {
             include_once('home.php');
             echo getHomeTitle();
             break;
+        case "register":
+            include_once('register.php');
+            echo getRegisterTitle();
+            break;
         default:
             include_once('error404.php');
             echo get404Title();
@@ -73,6 +77,7 @@ function showNavBar() {
     <li><a href="index.php?page=home">HOME</a></li>
     <li><a href="index.php?page=about">ABOUT</a></li>
     <li><a href="index.php?page=contact">CONTACT</a></li>
+    <li><a href="index.php?page=register">REGISTER</a></li>
     </ul>';
 }
 
@@ -97,6 +102,17 @@ function showContent($page) {
         case "home":
             include_once('home.php');
             showHomeContent();
+            break;
+
+        case "register":
+            include_once('register.php');
+            $vald_vals_errors = validateRegister();
+            if ($vald_vals_errors["valid"]) {
+                showContent("home");
+            }
+            else {
+                showRegisterContent($vald_vals_errors);
+            }
             break;
 
         default:

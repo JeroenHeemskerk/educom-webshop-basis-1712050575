@@ -109,7 +109,8 @@ function showContactStart() {
 
 function showContactEnd() {
     echo '<input type="hidden" id="page" name="page" value="contact">';
-    echo '<input type="submit" value="Verzenden"></form>';
+    echo '<input type="submit" value="Verzenden">';
+    echo '</form>';
 }
 
 function showContactField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL, $options=NULL, $optional=true) {
@@ -172,10 +173,6 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
 
 
 function showContactContent ($vald_vals_errs) {
-    $values = $vald_vals_errs["values"];
-    $errors = $vald_vals_errs["errors"];
-
-
     showContactStart();
     showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
     showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen", NULL, false);
