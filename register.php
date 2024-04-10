@@ -86,7 +86,6 @@ function validateRegister() {
             $errors["pswd2"] = "Wachtwoorden komen niet overen";
         }
         
-        var_dump($valid, $values, $errors);
         // kan ik de $key weglaten als ik die niet gebruik in de loop?
         foreach($errors as $field => $err_msg) {
             if (!empty($err_msg)) {
@@ -100,7 +99,6 @@ function validateRegister() {
         addAccount($values);
     }
 
-    var_dump($valid, $values, $errors);
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 
 }
