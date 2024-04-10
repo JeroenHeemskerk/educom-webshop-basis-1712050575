@@ -5,14 +5,14 @@ function getContactTitle() {
 }
 
 include_once('index.php');
-define("GENDERS", array("mevr"=>"Mevr.", "dhr"=>"Dhr.", "dhr_mevr" => "Dhr. / Mevr.", "mevr_dhr" => "Mevr. / Dhr.", "unspecified" => "Zeg ik liever niet."));
+define("GENDERS", array(""=> "--", "mevr"=>"Mevr.", "dhr"=>"Dhr.", "dhr_mevr" => "Dhr. / Mevr.", "mevr_dhr" => "Mevr. / Dhr.", "unspecified" => "Zeg ik liever niet."));
 define("COMM_PREFS", array("email" => "Email", "phone" => "Telefoon", "post" => "Post"));
 
 
 function validateContact() {
     $valid = false;
     $errors = array("gender"=>"", "name"=>"", "msg"=>"", 
-    "comm"=>"", "email"=>"", "phone"=>"", "post"=>"");
+    "comm"=>"", "email"=>"", "phone"=>"", "street"=>"", "housenumber"=>"", "postalcode"=>"", "municip"=>"");
 
     $values = array("gender"=>"--", "name"=>"", "email"=>"", "phone"=>"", "street"=>"", "housenumber"=>"", "additive"=>"", "postalcode"=>"", "municip"=>"", "msg"=>"", "comm"=>"");
 
@@ -30,6 +30,10 @@ function validateContact() {
 
         if ($values["gender"] == "--") {
             $errors["gender"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
+        }
+
+        else if (array_key_exists($values['gender'], GENDERS)) {
+            $errors["gender"] = "Selecteer alsjeblieft een van de aanhefvoorkeuren.";
         }
 
         if (empty($values["name"])) {
@@ -62,40 +66,37 @@ function validateContact() {
             $errors["phone"] = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
         }
 
-        // TODO: make each exception its own error to pass to errors assoc. array
-        function handle_post($comm, $street, $housenumber, $postalcode, $municip) {
-            # To avoid calling empty twice per var.
-            $street_flag = empty($street);
-            $housenumber_flag = empty($housenumber);
-            $postalcode_flag = empty($postalcode);
-            $municip_flag = empty($municip);
-    
-            if ($comm != "Post" && $street_flag && $housenumber_flag && $postalcode_flag && $municip_flag) {
-                return "";
-            }
+        $street_flag = empty($values["street"]);
+        $housenumber_flag = empty($values["housenumber"]);
+        $postalcode_flag = empty($values["postalcode"]);
+        $municip_flag = empty($values["municip"]);
+        if ($values["comm"] == "Post" || !$street_flag || !$housenumber_flag || !$postalcode_flag  || !$municip_flag) {
             if ($street_flag) {
-                return "Vul alsjeblieft je straatnaam in.";
+                $errors["street"] = "Vul alsjeblieft je straatnaam in.";
             }
             if ($housenumber_flag) {
-                return "Vul alsjeblieft je huisnummer in.";
+                echo "leeg huisnummer";
+                $errors["housenumber"] = "Vul alsjeblieft je huisnummer in.";
             }
             if ($postalcode_flag) {
-                return "Vul alsjeblieft je postcode in.";
+                $errors["postalcode"] = "Vul alsjeblieft je postcode in.";
             }
-            if (!preg_match('/^[0-9]{4}[A-Z]{2}$/', $postalcode)) {
-                return "Vul alsjeblieft een geldige Nederlands postcode in.";
+            else if (!preg_match('/^[0-9]{4}[A-Z]{2}$/', $values["postalcode"])) {
+                $errors["postalcode"] = "Vul alsjeblieft een geldige Nederlands postcode in."; 
             }
             if ($municip_flag) {
-                return "Vul alsjeblieft je gemeente in.";
+                $errors["municip"] = "Vul alsjeblieft je gemeente in.";
             }
-    
-            return "";
         }
 
-
-        $errors["post"] = handle_post($values["comm"], $values["street"], $values["housenumber"], $values["postalcode"], $values["municip"]);
-
-        $valid = empty($errors["gender"]) && empty($errors["name"])  && empty($errors["msg"]) && empty($errors["comm"]) && empty($errors["email"]) && empty($errors["phone"]) && empty($errors["post"]);
+        // kan ik de $key weglaten als ik die niet gebruik in de loop?
+        foreach($errors as $field => $err_msg) {
+            if (!empty($err_msg)) {
+                $valid = false;
+                break;
+            }
+            $valid = true;
+        }
     }
 
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
@@ -151,6 +152,7 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
 
         case "select":
             echo '<' . $type . ' id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '">';
+            // kan ik de $key weglaten als ik die niet gebruik in de loop?
             foreach($options as $key => $option) {
                 echo '<option value="' . $option . '"';
                 if ($values[$fieldName] == $option) {echo "selected";}
