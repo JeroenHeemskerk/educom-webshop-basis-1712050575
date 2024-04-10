@@ -5,44 +5,25 @@ showPage($page);
 function getRequestedPage() {
     $request_type = $_SERVER['REQUEST_METHOD'];
     if ($request_type == "POST") {
-        $request_page = getPostPage("page");
+        $request_page = getPostVar("page");
     }
     else {
-        $request_page = getGetPage("page");
+        $request_page = getGetVar("page");
     }
     return $request_page;
 }
-
-function getPostPage($key, $default="home") {
-    # Gets the page var from the POST request and applies no filter (currently)
-    $value = filter_input(INPUT_POST, $key); 
-        
-    # If it is not found, return the default
-    return isset($value) ? $value : $default;
+function getGetVar($key, $default="")  
+{  
+    $value = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);  
+     
+    return isset($value) ? trim($value) : $default;   
 }
 
-function getGetPage($key, $default="home") {
-    # Gets the page var from the GET request and applies no filter (currently)
-    $value = filter_input(INPUT_GET, $key);
-
-    # If it is not found, return the default
-    return isset($value) ? $value : $default;
-}
-
-
-function getPostVar($key, $filter="string", $default="") 
-{ 
-
-    if ($filter == "string") {
-        $value = filter_input(INPUT_POST, htmlspecialchars($key));
-    }
-
-    else {
-        $value = filter_input(INPUT_POST, $key, $filter); 
-    }
-    
-    return isset($value) ? $value : $default; 
-
+function getPostVar($key, $default="", $filter = FILTER_DEFAULT)  
+{  
+    $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS);  
+     
+    return isset($value) ? trim($value) : $default;   
 }
 
 function beginDocument() {
