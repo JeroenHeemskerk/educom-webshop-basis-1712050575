@@ -5,60 +5,64 @@ function getContactTitle() {
 }
 
 include_once('index.php');
+define("GENDERS", array("mevr"=>"Mevr.", "dhr"=>"Dhr.", "dhr_mevr" => "Dhr. / Mevr.", "mevr_dhr" => "Mevr. / Dhr.", "unspecified" => "Zeg ik liever niet."));
+define("COMM_PREFS", array("email" => "Email", "phone" => "Telefoon", "post" => "Post"));
+
 
 function validateContact() {
     $valid = false;
-    $errors = array("gender_error"=>"", "name_error"=>"", "msg_error"=>"", 
-    "comm_error"=>"", "email_error"=>"", "phone_error"=>"", "post_error"=>"");
+    $errors = array("gender"=>"", "name"=>"", "msg"=>"", 
+    "comm"=>"", "email"=>"", "phone"=>"", "post"=>"");
 
-    $values = array("gender"=>"--", "name"=>"", "email"=>"", "phone"=>"", "street"=>"", "housenumber"=>"", "house_add"=>"", "postalcode"=>"", "municip"=>"", "msg"=>"", "comm"=>"");
+    $values = array("gender"=>"--", "name"=>"", "email"=>"", "phone"=>"", "street"=>"", "housenumber"=>"", "additive"=>"", "postalcode"=>"", "municip"=>"", "msg"=>"", "comm"=>"");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $values["gender"] = getPostVar("gender");
-        $values["name"] =  getPostVar("fullname");
+        $values["name"] =  getPostVar("name");
         $values["email"] =  getPostVar("email", FILTER_SANITIZE_EMAIL);
-        $values["phone"] =  getPostVar("phonenumber");
+        $values["phone"] =  getPostVar("phone");
         $values["street"] =  getPostVar("street");
         $values["housenumber"] =  getPostVar("housenumber");
-        $values["house_add"] =  getPostVar("addition");
+        $values["additive"] =  getPostVar("additive");
         $values["postalcode"] =  getPostVar("postalcode");
-        $values["municip"] =  getPostVar("municipality");
-        $values["msg"] =  getPostVar("message");
+        $values["municip"] =  getPostVar("municip");
+        $values["msg"] =  getPostVar("msg");
 
         if ($values["gender"] == "--") {
-            $errors["gender_error"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
+            $errors["gender"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
         }
 
         if (empty($values["name"])) {
-            $errors["name_error"] = "Vul alsjeblieft je volledige naam in.";
+            $errors["name"] = "Vul alsjeblieft je volledige naam in.";
         }
         else if (!preg_match('/[a-zA-Z]/', $values["name"])) {  
-            $errors["name_error"] = "Vul alsjeblieft een naam in met minstens 1 letter.";
+            $errors["name"] = "Vul alsjeblieft een naam in met minstens 1 letter.";
         }
 
         if (empty($values["msg"])) {
-            $errors["msg_error"] = "Vul alsjeblieft een bericht in.";
+            $errors["msg"] = "Vul alsjeblieft een bericht in.";
         }
         
-        if (empty(getPostVar("communicationpref"))) {
-            $errors["comm_error"] = "Vul alsjeblieft je communicatievoorkeur in.";
+        if (empty(getPostVar("comm"))) {
+            $errors["comm"] = "Vul alsjeblieft je communicatievoorkeur in.";
         }
 
         else {
-            $values["comm"] = getPostVar("communicationpref");
+            $values["comm"] = getPostVar("comm");
         }
 
         if ($values["comm"] == "Email" && !filter_var($values["email"], FILTER_VALIDATE_EMAIL)) {
-            $errors["email_error"] = "Vul alsjeblieft een geldig emailadres in.";
+            $errors["email"] = "Vul alsjeblieft een geldig emailadres in.";
         }
 
         if ($values["comm"] == "Telefoon" && empty($values["phone"])) {
-            $errors["phone_error"] = "Vul alsjeblieft een telefoonnummer in. ";
+            $errors["phone"] = "Vul alsjeblieft een telefoonnummer in. ";
         }
         else if (!empty($values["phone"]) && !ctype_digit($values["phone"])) {
-            $errors["phone_error"] = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
+            $errors["phone"] = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
         }
 
+        // TODO: make each exception its own error to pass to errors assoc. array
         function handle_post($comm, $street, $housenumber, $postalcode, $municip) {
             # To avoid calling empty twice per var.
             $street_flag = empty($street);
@@ -89,62 +93,100 @@ function validateContact() {
         }
 
 
-        $errors["post_error"] = handle_post($values["comm"], $values["street"], $values["housenumber"], $values["postalcode"], $values["municip"]);
+        $errors["post"] = handle_post($values["comm"], $values["street"], $values["housenumber"], $values["postalcode"], $values["municip"]);
 
-        $valid = empty($errors["gender_error"]) && empty($errors["name_error"])  && empty($errors["msg_error"]) && empty($errors["comm_error"]) && empty($errors["email_error"]) && empty($errors["phone_error"]) && empty($errors["post_error"]);
+        $valid = empty($errors["gender"]) && empty($errors["name"])  && empty($errors["msg"]) && empty($errors["comm"]) && empty($errors["email"]) && empty($errors["phone"]) && empty($errors["post"]);
     }
 
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 }
 
+function showContactStart() {
+    echo "<h2>Het Contactformulier</h2>";
+    echo '<form method="POST" action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">
+    <p>Neem contact op:</p>';
+}
+
+function showContactEnd() {
+    echo '<input type="hidden" id="page" name="page" value="contact">';
+    echo '<input type="submit" value="Verzenden"></form>';
+}
+
+function showContactField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL, $options=NULL, $optional=false) {
+    $values = $vald_vals_errs["values"];
+    $errors = $vald_vals_errs["errors"];
+
+    echo '<div>';
+    echo '<label for="' . $fieldName . '">' . $label . ': </label>';
+
+    switch ($type) {
+        case "text":
+        case "tel":
+        case "number":
+            echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
+            echo '<span class="error">'; if (!empty($errors[$fieldName])) {echo " * " . $errors[$fieldName];} echo '</span>';
+            break;
+
+
+        case "textarea":
+            echo '<span class="error"> * ' . $errors[$fieldName] . '<br></span>';
+            echo '<' . $type . ' id="' . $fieldName . '" name="' . $fieldName . '" ';
+            foreach($options as $key => $option) {
+                // bit hacky, used for cols and rows
+                echo $key . '="' . $option . '" ';
+            }
+            echo 'placeholder="' . $placeholder . '">';
+            echo $values[$fieldName] . '</' . $type . '>.';
+            break;
+
+        case "radio":
+            echo '<span class="error"> * '  . $errors[$fieldName] . '<br></span>';
+            foreach($options as $key => $option) {
+                echo '<input type="' . $type . '"';
+                echo 'id="' . $key . '" name="' . $fieldName . '" value="' . $option . '" ';
+                if (isset($values[$fieldName]) && $values[$fieldName] == $option) { echo "checked";}
+                echo '><label for="' . $key . '">' . $option . '</label><br>';
+            }
+            break;
+
+        case "select":
+            echo '<' . $type . ' id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '">';
+            foreach($options as $key => $option) {
+                echo '<option value="' . $option . '"';
+                if ($values[$fieldName] == $option) {echo "selected";}
+                echo '>' . $option . '</option>';
+            }
+            echo '</select>';
+            echo '<span class="error"> * ' . $errors[$fieldName] . '</span>';
+            break;
+    }
+    echo '</div>';
+}
+
+
 function showContactContent ($vald_vals_errs) {
     $values = $vald_vals_errs["values"];
     $errors = $vald_vals_errs["errors"];
 
-    echo "<h2>Het Contactformulier</h2>";
-    echo '<form method="POST" action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">
-        <p>Neem contact op:</p>
-        <label for="gender">Aanhef: </label>
-        <select id="gender" name="gender" value="'. $values["gender"] . ' ">
-            <option value="--">--</option>
-            <option value="Mevr."'; if ($values["gender"] == "Mevr.") {echo "selected";} echo '>Mevr.</option>
-            <option value="Dhr."';  if ($values["gender"] == "Dhr.") {echo "selected";} echo '>Dhr.</option>
-            <option value="Dhr. / Mevr."';  if ($values["gender"] == "Dhr. / Mevr.") {echo "selected";} echo '>Dhr. / Mevr.</option>
-            <option value="Mevr. / Dhr."'; if ($values["gender"] == "Mevr. / Dhr.") {echo "selected";} echo '>Mevr. / Dhr.</option>
-            <option value="Onbepaald"'; if ($values["gender"] == "Onbepaald") {echo "selected";} echo '>Zeg ik liever niet.</option>
-        </select>';
-        echo '<span class="error"> * ' . $errors["gender_error"] . '</span>';
 
-        echo '<label for="fullname"><br>Voor- en achternaam: </label><input type="text" id="fullname" name="fullname" value="' .  $values["name"] . '" placeholder="Marie Jansen">';
-        echo '<span class="error"> * ' . $errors["name_error"] . ' </span>
-
-        <label for="email"><br>Mailadres: </label><input type="text" id="email" name="email" value="' . $values["email"] . '" placeholder="voorbeeld@mail.com">';
-        echo '<span class="error">'; if (!empty($errors["email_error"])) {echo " * " . $errors["email_error"];} echo '</span>
-
-        <label for="phonenumber"><br>Telefoonnummer: </label><input type="tel" id="phonenumber" name="phonenumber" value="' . $values["phone"] . '" placeholder="0612345678">';
-        echo '<span class="error">'; if (!empty($errors["phone_error"])) {echo " * " . $errors["phone_error"];} echo '</span>
-
-        <label for="street"><br>Straat: </label><input type="text" id="street" name="street" value="' . $values["street"] . '" placeholder="Voorbeeldstraat">
-        <label for="housenumber"><br>Huisnummer: </label><input type="number" id="housenumber" name="housenumber" value="' . $values["housenumber"] . '" placeholder="1">
-        <label for ="addition"><br>Toevoeging: </label><input type="text" id="addition" name="addition" value="' . $values["house_add"] . '" placeholder="A">
-        <label for="postalcode"><br>Postcode: </label><input type="text" id="postalcode" name="postalcode" value="'. $values["postalcode"] . '" placeholder="1234AB">
-        <label for="municipality"><br>Gemeente: </label><input type="text" id="municipality" name="municipality" value="' . $values["municip"] . '" placeholder="Utrecht">
-        <span class="error">'; if (!empty($errors["post_error"])) {echo "* " . $errors["post_error"];} echo '</span>
-
-        <p>Communicatie voorkeur, via: <span class="error"> * '  . $errors["comm_error"] . '</span></p>
-        <input type="radio" name="communicationpref" id="email" value="Email" '; if (isset($values["comm"]) && $values["comm"]=="Email") echo "checked"; echo '><label for="email">Email</label><br>
-        <input type="radio" name="communicationpref" id="tel" value="Telefoon" '; if (isset($values["comm"]) && $values["comm"]=="Telefoon") echo "checked"; echo '><label for="tel">Telefoon</label><br>
-        <input type="radio" name="communicationpref" id="mail" value="Post" '; if (isset($values["comm"]) && $values["comm"]=="Post") echo "checked"; echo '><label for="mail">Post</label><br>
-
-        <label for="message"><br>Uw bericht: </label><span class="error"> * ' . $errors["msg_error"] . '<br></span><textarea id="message" name="message" rows="10" cols="60" placeholder="Typ hier uw bericht...">' . $values["msg"] . '</textarea><br><br>';
-        echo '<input type="hidden" id="page" name="page" value="contact">';
-        echo '<input type="submit" value="Verzenden">
-    </form>';
+    showContactStart();
+    showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
+    showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen");
+    showContactField('email', "Email", "text", $vald_vals_errs, "voorbeeld@mail.com");
+    showContactField('phone', "Telefoonnummer", "tel", $vald_vals_errs, "0612345678");
+    showContactField('street', 'Straatnaam', 'text', $vald_vals_errs, "Lindeweg");
+    showContactField("housenumber", "Huisnummer", "number", $vald_vals_errs, "1");
+    showContactField("additive", "Toevoeging", "text", $vald_vals_errs, "A");
+    showContactField("postalcode", "Postcode", "text", $vald_vals_errs, "1234AB");
+    showContactField("municip", "Gemeente", "text", $vald_vals_errs, "Utrecht");
+    showContactField('comm', 'Communicatievoorkeur, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
+    showContactField('msg', "Uw bericht", "textarea", $vald_vals_errs, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
+    showContactEnd();
 } 
         
-function showContactThanks($vald_vals_errors) {
-    $values = $vald_vals_errors["values"];
-    
+function showContactThanks($vald_vals_errs) {
+    $values = $vald_vals_errs["values"];
+
     echo '<p>Bedankt, ' . $values["name"] . ', voor je reactie:</p>
     <div>Aanhef: ' . $values["gender"] . '</div>
     <div>Naam: ' . $values["name"] . '</div>';
@@ -157,7 +199,7 @@ function showContactThanks($vald_vals_errors) {
     
     // At this point, either all are filled in, or none. So only one check required.
     if (!empty($values["street"])) { 
-        echo '<div>Adres: ' . $values["street"] . ' ' . $values["housenumber"] . $values["house_add"] . '</div>
+        echo '<div>Adres: ' . $values["street"] . ' ' . $values["housenumber"] . $values["additive"] . '</div>
         <div>Woonplaats: ' . $values["postalcode"] . ', ' . $values["municip"] . '</div>
         <div>Communicatievoorkeur: ' . $values["comm"] . '</div>';
     }
