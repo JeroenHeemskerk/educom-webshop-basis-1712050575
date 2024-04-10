@@ -1,6 +1,7 @@
 body {
     width: 800px;
     margin: auto;
+    background-color: white;
 }
 
 h1 {
@@ -31,7 +32,6 @@ ul.navbar li > a {
 }
 
 .content {
-    background-color: white;
     color: grey;
     font-size: 12px;
     font-family: "Open Sans", sans-serif;
@@ -58,11 +58,22 @@ form {
 
 input, select, textarea { 
     width: 400px; 
+    display: inline-block;
 } 
 
-input[type=radio], input[type=submit] { 
+input[type=radio], .radio, input[type=submit] { 
     width: auto; 
-} 
+}
+
+label {
+    width: 200px;
+    display: inline-block;
+}
+
+
+textarea {
+    vertical-align: top;
+}
 
 #profiel-foto {
     width: 150px;

@@ -75,7 +75,6 @@ function validateContact() {
                 $errors["street"] = "Vul alsjeblieft je straatnaam in.";
             }
             if ($housenumber_flag) {
-                echo "leeg huisnummer";
                 $errors["housenumber"] = "Vul alsjeblieft je huisnummer in.";
             }
             if ($postalcode_flag) {
@@ -113,7 +112,7 @@ function showContactEnd() {
     echo '<input type="submit" value="Verzenden"></form>';
 }
 
-function showContactField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL, $options=NULL, $optional=false) {
+function showContactField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL, $options=NULL, $optional=true) {
     $values = $vald_vals_errs["values"];
     $errors = $vald_vals_errs["errors"];
 
@@ -125,29 +124,35 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
         case "tel":
         case "number":
             echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
-            echo '<span class="error">'; if (!empty($errors[$fieldName])) {echo " * " . $errors[$fieldName];} echo '</span>';
+            echo '<span class="error">';
+            if (!$optional) {echo " * ";}
+            if (!empty($errors[$fieldName])) {
+                if ($optional) {echo " * ";} 
+                echo  $errors[$fieldName];
+            }
+            echo '</span>';
             break;
 
 
         case "textarea":
-            echo '<span class="error"> * ' . $errors[$fieldName] . '<br></span>';
             echo '<' . $type . ' id="' . $fieldName . '" name="' . $fieldName . '" ';
             foreach($options as $key => $option) {
                 // bit hacky, used for cols and rows
                 echo $key . '="' . $option . '" ';
             }
             echo 'placeholder="' . $placeholder . '">';
-            echo $values[$fieldName] . '</' . $type . '>.';
+            echo $values[$fieldName] . '</' . $type . '>';
+            echo '<span class="error"> * ' . $errors[$fieldName] . '</span>';
             break;
 
         case "radio":
-            echo '<span class="error"> * '  . $errors[$fieldName] . '<br></span>';
             foreach($options as $key => $option) {
                 echo '<input type="' . $type . '"';
                 echo 'id="' . $key . '" name="' . $fieldName . '" value="' . $option . '" ';
                 if (isset($values[$fieldName]) && $values[$fieldName] == $option) { echo "checked";}
-                echo '><label for="' . $key . '">' . $option . '</label><br>';
+                echo '><label class="radio" for="' . $key . '">' . $option . '</label>';
             }
+            echo '<span class="error"> * '  . $errors[$fieldName] . '</span>';
             break;
 
         case "select":
@@ -173,7 +178,7 @@ function showContactContent ($vald_vals_errs) {
 
     showContactStart();
     showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
-    showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen");
+    showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen", NULL, false);
     showContactField('email', "Email", "text", $vald_vals_errs, "voorbeeld@mail.com");
     showContactField('phone', "Telefoonnummer", "tel", $vald_vals_errs, "0612345678");
     showContactField('street', 'Straatnaam', 'text', $vald_vals_errs, "Lindeweg");
@@ -181,7 +186,7 @@ function showContactContent ($vald_vals_errs) {
     showContactField("additive", "Toevoeging", "text", $vald_vals_errs, "A");
     showContactField("postalcode", "Postcode", "text", $vald_vals_errs, "1234AB");
     showContactField("municip", "Gemeente", "text", $vald_vals_errs, "Utrecht");
-    showContactField('comm', 'Communicatievoorkeur, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
+    showContactField('comm', 'Communicatie, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
     showContactField('msg', "Uw bericht", "textarea", $vald_vals_errs, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
     showContactEnd();
 } 
