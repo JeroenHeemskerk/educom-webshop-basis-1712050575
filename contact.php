@@ -92,10 +92,10 @@ function validateContact() {
         foreach($errors as $field => $err_msg) {
             if (!empty($err_msg)) {
                 $valid = false;
-                break;
+                return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
             }
-            $valid = true;
         }
+        $valid = true;
     }
 
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];

@@ -1,0 +1,3 @@
+[email]|[naam]|[wachtwoord]
+frans@mail.com|frans|snarf
+ha34@com.com|ha|eens

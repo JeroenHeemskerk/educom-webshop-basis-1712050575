@@ -40,9 +40,7 @@ function showRegisterContent($vald_vals_errs) {
     showRegisterField('username', 'Gebruikersnaam', 'text', $vald_vals_errs);
     showRegisterField('email', 'Email', 'text', $vald_vals_errs);
     showRegisterField('pswd', 'Wachtwoord', 'password', $vald_vals_errs);
-    showRegisterField('pswd', 'Herhaal wachtwoord', 'password', $vald_vals_errs);
-
-
+    showRegisterField('pswd2', 'Herhaal wachtwoord', 'password', $vald_vals_errs);
     showRegisterEnd();
 }
 
@@ -67,10 +65,10 @@ function validateRegister() {
             $errors["email"] = "Vul alsjeblieft je emailadres in.";
         }
 
-        // TODO
-        // if (doesEmailExist($values["email"])) {
-        //     $errors["email"] = "Dit emailadres heeft al een account op deze website.";
-        // }
+        include_once('communication.php');
+        if (doesEmailExist($values["email"])) {
+            $errors["email"] = "Dit emailadres heeft al een account op deze website.";
+        }
 
         if (!filter_var($values["email"], FILTER_VALIDATE_EMAIL)) {
             $errors["email"] = "Vul alsjeblieft een geldig emailadres in.";
@@ -88,38 +86,23 @@ function validateRegister() {
             $errors["pswd2"] = "Wachtwoorden komen niet overen";
         }
         
+        var_dump($valid, $values, $errors);
         // kan ik de $key weglaten als ik die niet gebruik in de loop?
         foreach($errors as $field => $err_msg) {
             if (!empty($err_msg)) {
                 $valid = false;
-                break;
+                return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
             }
-            $valid = true;
         }
 
+        $valid = true;
+        include_once('communication.php');
+        addAccount($values);
     }
 
+    var_dump($valid, $values, $errors);
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 
 }
-// TODO: wat is "or" keyword
-// $users = fopen("users.txt", "w") or die("Unable to open file!");
 
-// fwrite($users, "[email]|[naam]|[wachtwoord]\n");
-// fclose($users);
-
-// // note the "a/append"
-// $users = fopen("users.txt", "a") or die("Unable to open file!");
-// fwrite($users, "coach@man-kind.nl" . PHP_EOL);
-// fclose($users);
-
-// $users = fopen('users.txt', 'r') or die("No can do!");
-
-// while (!feof($users)) {
-//     $current_user = fgets($users);
-//     echo $current_user;
-//     if ($current_user == "coach@man-kind.nl" . PHP_EOL) {
-//         echo $current_user;
-//     }
-// }
 ?>

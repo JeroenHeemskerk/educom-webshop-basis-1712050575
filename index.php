@@ -12,17 +12,15 @@ function getRequestedPage() {
     }
     return $request_page;
 }
-function getGetVar($key, $default="")  
-{  
+function getGetVar($key, $default="") {  
     $value = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);  
      
     return isset($value) ? trim($value) : $default;   
 }
 
-function getPostVar($key, $default="", $filter = FILTER_DEFAULT)  
-{  
+function getPostVar($key, $default="", $filter=false) { 
+
     $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS);  
-     
     return isset($value) ? trim($value) : $default;   
 }
 
