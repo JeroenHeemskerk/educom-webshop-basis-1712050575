@@ -84,11 +84,9 @@ function showLoginContent() {
     }
 
     else {
-        if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
         $_SESSION["login"] = true;
         $_SESSION["email"] = getPostVar("email");
         header("Location: index.php?page=home");
     }
 
 }
-?>

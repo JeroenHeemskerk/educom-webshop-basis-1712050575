@@ -105,5 +105,3 @@ function validateRegister() {
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 
 }
-
-?>

@@ -75,5 +75,3 @@ function getUserByEmail($email) {
     fclose($users);
     return false;
 }
-
-?>
