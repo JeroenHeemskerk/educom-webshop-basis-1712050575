@@ -5,7 +5,7 @@ function addAccount($credentials) {
     $users = fopen("users.txt", "a") or die("Unable to open file!");
     
     $registration = [$credentials["email"], $credentials["username"] , $credentials["pswd"]];
-    fwrite($users, implode("|", $registration) . PHP_EOL);
+    fwrite($users, PHP_EOL . implode("|", $registration));
     fclose($users);
 }
 
@@ -26,15 +26,15 @@ function doesEmailExist($email) {
 
 function authenticateUser($email, $pswd) {
     $users = fopen('users.txt', "r") or die("Unable to open file!");
+    $line = fgets($users);
 
     while(!feof($users)) {
-        $current_credentials = explode("|", fgets($users));
-        $current_email = $current_credentials[0];
-        echo $current_email;
-        echo "-----" . "\n";
-        $current_pswd = $current_credentials[2];
+        $line = fgets($users);
 
-        if ($current_email == $email && $current_pswd == $pswd . PHP_EOL) {
+        $current_credentials = explode("|", $line);
+        $current_email = $current_credentials[0];
+        $current_pswd = $current_credentials[2];
+        if ($current_email == $email && $current_pswd == $pswd) {
             return true;
         }
     }
