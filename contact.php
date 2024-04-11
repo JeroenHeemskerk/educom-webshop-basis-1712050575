@@ -88,13 +88,13 @@ function validateContact() {
             }
         }
 
-        // kan ik de $key weglaten als ik die niet gebruik in de loop?
-        foreach($errors as $field => $err_msg) {
+        foreach($errors as $err_msg) {
             if (!empty($err_msg)) {
                 $valid = false;
                 return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
             }
         }
+        
         $valid = true;
     }
 
@@ -158,8 +158,7 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
 
         case "select":
             echo '<' . $type . ' id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '">';
-            // kan ik de $key weglaten als ik die niet gebruik in de loop?
-            foreach($options as $key => $option) {
+            foreach($options as $option) {
                 echo '<option value="' . $option . '"';
                 if ($values[$fieldName] == $option) {echo "selected";}
                 echo '>' . $option . '</option>';

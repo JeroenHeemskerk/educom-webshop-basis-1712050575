@@ -48,8 +48,8 @@ function showRegisterContent() {
     else {
         include_once('communication.php');
         addAccount($vald_vals_errs["values"]);
-        include_once('home.php');
-        showHomeContent();
+        include_once('login.php');
+        showLoginContent();
     }
 }
 
@@ -95,8 +95,7 @@ function validateRegister() {
             $errors["pswd2"] = "Wachtwoorden komen niet overeen.";
         }
         
-        // kan ik de $key weglaten als ik die niet gebruik in de loop?
-        foreach($errors as $field => $err_msg) {
+        foreach($errors as $err_msg) {
             if (!empty($err_msg)) {
                 $valid = false;
                 return ['valid' => $valid, 'values' => $values, 'errors' => $errors];

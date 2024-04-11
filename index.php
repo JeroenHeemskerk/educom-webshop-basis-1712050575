@@ -19,8 +19,8 @@ function getGetVar($key, $default="") {
 }
 
 function getPostVar($key, $default="", $filter=false) { 
+    $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS); 
 
-    $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS);  
     return isset($value) ? trim($value) : $default;   
 }
 
@@ -76,6 +76,7 @@ function showNavBar() {
     <li><a href="index.php?page=about">ABOUT</a></li>
     <li><a href="index.php?page=contact">CONTACT</a></li>
     <li><a href="index.php?page=register">REGISTER</a></li>
+    <li><a href="index.php?page=login">LOGIN</a></li>
     </ul>';
 }
 
@@ -99,6 +100,11 @@ function showContent($page) {
         case "register":
             include_once('register.php');
             showRegisterContent();
+            break;
+
+        case "login":
+            include_once('login.php');
+            showLoginContent();
             break;
 
         default:
