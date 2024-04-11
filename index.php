@@ -88,13 +88,7 @@ function showContent($page) {
 
         case "contact":
             include_once('contact.php');
-            $vald_vals_errors = validateContact();
-            if ($vald_vals_errors["valid"]) {
-                showContactThanks($vald_vals_errors);
-            }
-            else {
-                showContactContent($vald_vals_errors);
-            }
+            showContactContent();
             break;
 
         case "home":
@@ -104,13 +98,7 @@ function showContent($page) {
 
         case "register":
             include_once('register.php');
-            $vald_vals_errors = validateRegister();
-            if ($vald_vals_errors["valid"]) {
-                showContent("home");
-            }
-            else {
-                showRegisterContent($vald_vals_errors);
-            }
+            showRegisterContent();
             break;
 
         default:

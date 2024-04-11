@@ -22,7 +22,7 @@ function showRegisterField($fieldName, $label, $type, $vald_vals_errs, $placehol
             case "number":
             case "password":
                 echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
-                echo '<span class="error">' . $errors[$fieldName] . '</span>';
+                echo '<span class="error"> ' . $errors[$fieldName] . '</span>';
                 break;
             }
         echo '</div>';
@@ -35,13 +35,22 @@ function showRegisterEnd() {
 }
 
 
-function showRegisterContent($vald_vals_errs) {
-    showRegisterStart();
-    showRegisterField('username', 'Gebruikersnaam', 'text', $vald_vals_errs);
-    showRegisterField('email', 'Email', 'text', $vald_vals_errs);
-    showRegisterField('pswd', 'Wachtwoord', 'password', $vald_vals_errs);
-    showRegisterField('pswd2', 'Herhaal wachtwoord', 'password', $vald_vals_errs);
-    showRegisterEnd();
+function showRegisterContent() {
+    $vald_vals_errs = validateRegister();
+    if (!$vald_vals_errs["valid"]) {
+        showRegisterStart();
+        showRegisterField('username', 'Gebruikersnaam', 'text', $vald_vals_errs);
+        showRegisterField('email', 'Email', 'text', $vald_vals_errs);
+        showRegisterField('pswd', 'Wachtwoord', 'password', $vald_vals_errs);
+        showRegisterField('pswd2', 'Herhaal wachtwoord', 'password', $vald_vals_errs);
+        showRegisterEnd();
+    }
+    else {
+        include_once('communication.php');
+        addAccount($vald_vals_errs["values"]);
+        include_once('home.php');
+        showHomeContent();
+    }
 }
 
 function validateRegister() {
@@ -83,7 +92,7 @@ function validateRegister() {
         }
 
         if ($values["pswd"] != $values["pswd2"]) {
-            $errors["pswd2"] = "Wachtwoorden komen niet overen";
+            $errors["pswd2"] = "Wachtwoorden komen niet overeen.";
         }
         
         // kan ik de $key weglaten als ik die niet gebruik in de loop?
@@ -95,8 +104,6 @@ function validateRegister() {
         }
 
         $valid = true;
-        include_once('communication.php');
-        addAccount($values);
     }
 
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];

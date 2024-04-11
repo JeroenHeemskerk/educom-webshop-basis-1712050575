@@ -172,20 +172,27 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
 }
 
 
-function showContactContent ($vald_vals_errs) {
-    showContactStart();
-    showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
-    showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen", NULL, false);
-    showContactField('email', "Email", "text", $vald_vals_errs, "voorbeeld@mail.com");
-    showContactField('phone', "Telefoonnummer", "tel", $vald_vals_errs, "0612345678");
-    showContactField('street', 'Straatnaam', 'text', $vald_vals_errs, "Lindeweg");
-    showContactField("housenumber", "Huisnummer", "number", $vald_vals_errs, "1");
-    showContactField("additive", "Toevoeging", "text", $vald_vals_errs, "A");
-    showContactField("postalcode", "Postcode", "text", $vald_vals_errs, "1234AB");
-    showContactField("municip", "Gemeente", "text", $vald_vals_errs, "Utrecht");
-    showContactField('comm', 'Communicatie, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
-    showContactField('msg', "Uw bericht", "textarea", $vald_vals_errs, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
-    showContactEnd();
+function showContactContent () {
+    $vald_vals_errs = validateContact();
+
+    if (!$vald_vals_errs["valid"]) {
+        showContactStart();
+        showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
+        showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen", NULL, false);
+        showContactField('email', "Email", "text", $vald_vals_errs, "voorbeeld@mail.com");
+        showContactField('phone', "Telefoonnummer", "tel", $vald_vals_errs, "0612345678");
+        showContactField('street', 'Straatnaam', 'text', $vald_vals_errs, "Lindeweg");
+        showContactField("housenumber", "Huisnummer", "number", $vald_vals_errs, "1");
+        showContactField("additive", "Toevoeging", "text", $vald_vals_errs, "A");
+        showContactField("postalcode", "Postcode", "text", $vald_vals_errs, "1234AB");
+        showContactField("municip", "Gemeente", "text", $vald_vals_errs, "Utrecht");
+        showContactField('comm', 'Communicatie, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
+        showContactField('msg', "Uw bericht", "textarea", $vald_vals_errs, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
+        showContactEnd();
+    }
+    else {
+        showContactThanks($vald_vals_errs);
+    }
 } 
         
 function showContactThanks($vald_vals_errs) {
