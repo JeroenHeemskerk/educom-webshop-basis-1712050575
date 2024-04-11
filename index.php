@@ -104,7 +104,6 @@ function showNavBar() {
     echo '</ul>';
 }
 
-
 function showContent($page) {
     switch ($page) {
         case "about":

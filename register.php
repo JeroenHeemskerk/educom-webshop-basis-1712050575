@@ -32,7 +32,6 @@ function showRegisterEnd() {
     echo '</form>';
 }
 
-
 function showRegisterContent() {
     $vald_vals_errs = validateRegister();
     if (!$vald_vals_errs["valid"]) {
@@ -103,5 +102,4 @@ function validateRegister() {
     }
 
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
-
 }

@@ -1,4 +1,5 @@
 <?php 
+
 function getLoginTitle() {
     return "Login";
 }

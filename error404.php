@@ -1,4 +1,5 @@
 <?php
+
 function get404Title() {
     return "Page Not Found";
 }

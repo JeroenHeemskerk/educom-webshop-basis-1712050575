@@ -1,4 +1,5 @@
 <?php 
+
 function getHomeTitle() {
     return "Home";
 }
