@@ -18,18 +18,20 @@ function showLoginField($fieldName, $label, $type, $vald_vals_errs, $placeholder
 
     switch ($type) {
         case "text":
-        case "password":
             echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
             echo '<span class="error"> ' . $errors[$fieldName] . '</span>';
             break;
-        }
+
+        case "password":
+            echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" placeholder="' . $placeholder . '">';
+            echo '<span class="error"> ' . $errors[$fieldName] . '</span>';
+    }
     echo '</div>';
 }
 
 function validateLogin() {
     $valid = false;
     $errors = array("email"=>"", "pswd"=>"");
-
     $values = array("email"=>"", "pswd"=>"");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -50,7 +52,6 @@ function validateLogin() {
         if (!doesEmailExist($values["email"])) {
             $errors["email"] = "Er is geen account bekend op deze website met dit emailadres.";
         }
-
         else if (!authenticateUser($values["email"], $values["pswd"])) {
             $errors["pswd"] = "Wachtwoord onjuist.";
         }
@@ -83,11 +84,8 @@ function showLoginContent() {
         showLoginField('pswd', "Wachtwoord", 'password', $vald_vals_errs);
         showLoginEnd();
     }
-
     else {
-        $_SESSION["login"] = true;
-        $_SESSION["email"] = getPostVar("email");
+        doLoginUser($vald_vals_errs["values"]);
         header("Location: index.php?page=home");
     }
-
 }

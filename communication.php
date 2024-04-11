@@ -55,3 +55,30 @@ function getUserByEmail($email) {
     fclose($users);
     return false;
 }
+
+function getSessionVar($key, $default="") {
+    if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+    if (isset($_SESSION[$key])) {
+        return $_SESSION[$key];
+    }
+    return $default;
+}
+
+function isUserLoggedIn() {
+    return getSessionVar('login', false);
+}
+
+function doLoginUser($values) {
+    if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+    $_SESSION["email"] = $values["email"];
+    $_SESSION["login"] = true;
+}
+
+function doLogoutUser() {
+    session_unset();
+    session_destroy();
+}
+
+function getLoggedInUser() {
+    return getUserByEmail(getSessionVar('email'));
+}

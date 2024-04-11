@@ -25,13 +25,7 @@ function getPostVar($key, $default="", $filter=false) {
     return isset($value) ? trim($value) : $default;   
 }
 
-function getSessionVar($key, $default="") {
-    if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
-    if (isset($_SESSION[$key])) {
-        return $_SESSION[$key];
-    }
-    return $default;
-}
+
 
 function beginDocument() {
     echo '<!doctype html> 
@@ -85,21 +79,20 @@ function showBody($page) {
 }
 
 function showNavBar() {
-    echo '<ul class="navbar">';
-    echo '<li><a href="index.php?page=home">HOME</a></li>
-    <li><a href="index.php?page=about">ABOUT</a></li>
-    <li><a href="index.php?page=contact">CONTACT</a></li>';
+    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
 
-
-    $login = getSessionVar("login", False);
-
-    if (!$login) {
-        echo '<li><a href="index.php?page=register">REGISTER</a></li>
-        <li><a href="index.php?page=login">LOGIN</a></li>';
+    include_once('communication.php');
+    if (!isUserLoggedIn()) {
+        $menu["register"] = "REGISTER";
+        $menu["login"] = "LOGIN";
     }
     else {
-        include_once('communication.php');
-        echo '<li><a href="index.php?page=logout">LOGOUT ' . getUserByEmail(getSessionVar('email')) . '</a></li>';
+        $menu["logout"] = 'LOGOUT ' . getLoggedInUser();
+    }
+
+    echo '<ul class="navbar">';
+    foreach($menu as $page=>$label) {
+        echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';
     }
     echo '</ul>';
 }

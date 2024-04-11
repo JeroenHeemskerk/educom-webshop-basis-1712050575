@@ -1,7 +1,7 @@
 <?php 
 
 function logout() {
-    session_unset();
-    session_destroy();
+    include_once('communication.php');
+    doLogoutUser();
     header("Location: index.php?page=home");
 }
