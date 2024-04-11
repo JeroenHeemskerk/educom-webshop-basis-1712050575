@@ -1,9 +1,11 @@
 <?php 
+function getLoginTitle() {
+    return "Login";
+}
 
 function showLoginStart() {
     echo '<p class="content">Log hier in met je email en wachtwoord:</p>';
-    echo '<form method=POST action='; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">';
-
+    echo '<form method=POST action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">';
 }
 
 function showLoginField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL) {
@@ -15,8 +17,6 @@ function showLoginField($fieldName, $label, $type, $vald_vals_errs, $placeholder
 
     switch ($type) {
         case "text":
-        case "tel":
-        case "number":
         case "password":
             echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
             echo '<span class="error"> ' . $errors[$fieldName] . '</span>';
@@ -53,11 +53,21 @@ function validateLogin() {
         else if (!authenticateUser($values["email"], $values["pswd"])) {
             $errors["pswd"] = "Wachtwoord onjuist.";
         }
+
+        foreach($errors as $err_msg) {
+            if (!empty($err_msg)) {
+                $valid = false;
+                return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
+            }
+        }
+        
+        $valid = true;
     }
 
-
-    return ["valid" => $valid, "values" => $values, "errors" => $errors];
+    return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 }
+
+
 
 function showLoginEnd() {
     echo '<input type="hidden" id="page" name="page" value="login">';
@@ -72,12 +82,15 @@ function showLoginContent() {
         showLoginStart();
         showLoginField('email', 'Email', 'text', $vald_vals_errs);
         showLoginField('pswd', "Wachtwoord", 'password', $vald_vals_errs);
-        showLoginENd();
+        showLoginEnd();
     }
 
     else {
         session_start();
-        // etc
+        $_SESSION["login"] = true;
+        $_SESSION["username"] = getPostVar('username');
+        include_once('home.php');
+        showHomeContent();
         // ga naar home
     }
 

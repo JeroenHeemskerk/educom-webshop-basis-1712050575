@@ -49,6 +49,11 @@ function showHeader($page) {
             include_once('register.php');
             echo getRegisterTitle();
             break;
+        case "login":
+            include_once('login.php');
+            echo getLoginTitle();
+            break;
+
         default:
             include_once('error404.php');
             echo get404Title();

@@ -53,7 +53,7 @@ function authenticateUser($email, $pswd) {
         $current_email = $current_credentials[0];
         $current_pswd = $current_credentials[2];
 
-        if ($current_email == $email && $current_pswd == $pswd) {
+        if ($current_email == $email && $current_pswd == $pswd . PHP_EOL) {
             return true;
         }
     }
