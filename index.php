@@ -1,4 +1,5 @@
 <?php 
+if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
 $page = getRequestedPage();
 showPage($page);
 
@@ -22,6 +23,14 @@ function getPostVar($key, $default="", $filter=false) {
     $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS); 
 
     return isset($value) ? trim($value) : $default;   
+}
+
+function getSessionVar($key, $default="") {
+    if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+    if (isset($_SESSION[$key])) {
+        return $_SESSION[$key];
+    }
+    return $default;
 }
 
 function beginDocument() {
@@ -76,14 +85,25 @@ function showBody($page) {
 }
 
 function showNavBar() {
-    echo '<ul class="navbar">
-    <li><a href="index.php?page=home">HOME</a></li>
+    echo '<ul class="navbar">';
+    echo '<li><a href="index.php?page=home">HOME</a></li>
     <li><a href="index.php?page=about">ABOUT</a></li>
-    <li><a href="index.php?page=contact">CONTACT</a></li>
-    <li><a href="index.php?page=register">REGISTER</a></li>
-    <li><a href="index.php?page=login">LOGIN</a></li>
-    </ul>';
+    <li><a href="index.php?page=contact">CONTACT</a></li>';
+
+
+    $login = getSessionVar("login", False);
+
+    if (!$login) {
+        echo '<li><a href="index.php?page=register">REGISTER</a></li>
+        <li><a href="index.php?page=login">LOGIN</a></li>';
+    }
+    else {
+        include_once('communication.php');
+        echo '<li><a href="index.php?page=logout">LOGOUT ' . getUserByEmail(getSessionVar('email')) . '</a></li>';
+    }
+    echo '</ul>';
 }
+
 
 function showContent($page) {
     switch ($page) {
@@ -110,6 +130,11 @@ function showContent($page) {
         case "login":
             include_once('login.php');
             showLoginContent();
+            break;
+
+        case "logout":
+            include_once('logout.php');
+            logout();
             break;
 
         default:

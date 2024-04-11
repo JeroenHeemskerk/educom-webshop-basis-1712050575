@@ -67,8 +67,6 @@ function validateLogin() {
     return ['valid' => $valid, 'values' => $values, 'errors' => $errors];
 }
 
-
-
 function showLoginEnd() {
     echo '<input type="hidden" id="page" name="page" value="login">';
     echo '<input type="submit" value="Login">';
@@ -86,12 +84,10 @@ function showLoginContent() {
     }
 
     else {
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
         $_SESSION["login"] = true;
-        $_SESSION["username"] = getPostVar('username');
-        include_once('home.php');
-        showHomeContent();
-        // ga naar home
+        $_SESSION["email"] = getPostVar("email");
+        header("Location: index.php?page=home");
     }
 
 }

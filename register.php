@@ -18,8 +18,6 @@ function showRegisterField($fieldName, $label, $type, $vald_vals_errs, $placehol
     
         switch ($type) {
             case "text":
-            case "tel":
-            case "number":
             case "password":
                 echo '<input type="' . $type . '" id="' . $fieldName . '" name="' . $fieldName . '" value="' . $values[$fieldName] . '" placeholder="' . $placeholder . '">';
                 echo '<span class="error"> ' . $errors[$fieldName] . '</span>';
@@ -48,8 +46,7 @@ function showRegisterContent() {
     else {
         include_once('communication.php');
         addAccount($vald_vals_errs["values"]);
-        include_once('login.php');
-        showLoginContent();
+        header("Location: index.php?page=login");
     }
 }
 

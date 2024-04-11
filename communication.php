@@ -1,5 +1,4 @@
 <?php 
-session_start();
 
 // $_SESSION["login"] = true;
 // $_SESSION["username"] = "frans";
@@ -51,10 +50,26 @@ function authenticateUser($email, $pswd) {
     while(!feof($users)) {
         $current_credentials = explode("|", fgets($users));
         $current_email = $current_credentials[0];
+        echo $current_email;
+        echo "-----" . "\n";
         $current_pswd = $current_credentials[2];
 
         if ($current_email == $email && $current_pswd == $pswd . PHP_EOL) {
             return true;
+        }
+    }
+    fclose($users);
+    return false;
+}
+
+function getUserByEmail($email) {
+    $users = fopen("users.txt", "r") or die("Unable to open file!");
+
+    while (!feof($users)) {
+        $current_credentials = explode("|", fgets($users));
+        $current_email = $current_credentials[0];
+        if ($current_email == $email) {
+            return $current_credentials[1];
         }
     }
     fclose($users);
