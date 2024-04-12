@@ -27,17 +27,8 @@ function getPostVar($key, $default="", $filter=false) {
 }
 
 function processRequest($page) {
+    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
     switch ($page) {
-        case "login":
-            include_once('login.php');
-            $data = validateLogin();
-            if ($data["valid"]) {
-                include_once('communication.php');
-                doLoginUser($data["values"]);
-                $page = "home";
-            }
-            break;
-
         case "contact":
             include_once('contact.php');
             $data = validateContact();
@@ -46,7 +37,19 @@ function processRequest($page) {
             }
             break;
 
+        case "login":
+            include_once('login.php');
+            $data = validateLogin();
+            if ($data["valid"]) {
+                include_once('communication.php');
+                doLoginUser($data["values"]);
+                $menu["logout"] = "LOGOUT " . getLoggedInUser();
+                $page = "home";
+            }
+            break;
+
         case "logout":
+            include_once('communication.php');
             doLogoutUser();
             $page = "home";
             break;
@@ -55,7 +58,7 @@ function processRequest($page) {
             include_once('register.php');
             $data = validateRegister();
             if ($data["valid"]) {
-                addAccount($vald_vals_errs["values"]);
+                addAccount($data["values"]);
                 $page = "home";
             }
             break;
@@ -121,7 +124,6 @@ function showBody($data) {
 
 // TODO: incorporate menu into data
 function showNavBar($data) {
-    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
 
     include_once('communication.php');
     if (isUserLoggedIn()) {
@@ -165,17 +167,12 @@ function showContent($data) {
 
         case "register":
             include_once('register.php');
-            showRegisterContent();
+            showRegisterContent($data);
             break;
 
         case "login":
             include_once('login.php');
-            showLoginContent();
-            break;
-
-        case "logout":
-            include_once('logout.php');
-            logout();
+            showLoginContent($data);
             break;
 
         default:

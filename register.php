@@ -32,21 +32,14 @@ function showRegisterEnd() {
     echo '</form>';
 }
 
-function showRegisterContent() {
-    $vald_vals_errs = validateRegister();
-    if (!$vald_vals_errs["valid"]) {
-        showRegisterStart();
-        showRegisterField('username', 'Gebruikersnaam', 'text', $vald_vals_errs);
-        showRegisterField('email', 'Email', 'text', $vald_vals_errs);
-        showRegisterField('pswd', 'Wachtwoord', 'password', $vald_vals_errs);
-        showRegisterField('pswd2', 'Herhaal wachtwoord', 'password', $vald_vals_errs);
-        showRegisterEnd();
-    }
-    else {
-        include_once('communication.php');
-        addAccount($vald_vals_errs["values"]);
-        header("Location: index.php?page=login");
-    }
+function showRegisterContent($data) {
+    showRegisterStart();
+    showRegisterField('username', 'Gebruikersnaam', 'text', $data);
+    showRegisterField('email', 'Email', 'text', $data);
+    showRegisterField('pswd', 'Wachtwoord', 'password', $data);
+    showRegisterField('pswd2', 'Herhaal wachtwoord', 'password', $data);
+    showRegisterEnd();
+
 }
 
 function validateRegister() {

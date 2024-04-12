@@ -9,9 +9,9 @@ function showLoginStart() {
     echo '<form method=POST action="'; echo htmlspecialchars($_SERVER['PHP_SELF']); echo '">';
 }
 
-function showLoginField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL) {
-    $values = $vald_vals_errs["values"];
-    $errors = $vald_vals_errs["errors"];
+function showLoginField($fieldName, $label, $type, $data, $placeholder=NULL) {
+    $values = $data["values"];
+    $errors = $data["errors"];
 
     echo '<div>';
     echo '<label for="' . $fieldName . '">' . $label . ': </label>';
@@ -75,17 +75,9 @@ function showLoginEnd() {
     echo '</form>';
 }
 
-function showLoginContent() {
-    $vald_vals_errs = validateLogin();
-
-    if (!$vald_vals_errs["valid"]) {
-        showLoginStart();
-        showLoginField('email', 'Email', 'text', $vald_vals_errs);
-        showLoginField('pswd', "Wachtwoord", 'password', $vald_vals_errs);
-        showLoginEnd();
-    }
-    else {
-        doLoginUser($vald_vals_errs["values"]);
-        // header("Location: index.php?page=home");
-    }
+function showLoginContent($data) {
+    showLoginStart();
+    showLoginField('email', 'Email', 'text', $data);
+    showLoginField('pswd', "Wachtwoord", 'password', $data);
+    showLoginEnd();
 }
