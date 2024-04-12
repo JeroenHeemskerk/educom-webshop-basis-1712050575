@@ -1,8 +1,8 @@
 <?php 
 if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
-// var_dump($_POST);
 $page = getRequestedPage();
-showPage($page);
+$data = processRequest($page);
+showPage($data);
 
 function getRequestedPage() {
     $request_type = $_SERVER['REQUEST_METHOD'];
@@ -26,16 +26,56 @@ function getPostVar($key, $default="", $filter=false) {
     return isset($value) ? trim($value) : $default;   
 }
 
+function processRequest($page) {
+    switch ($page) {
+        case "login":
+            include_once('login.php');
+            $data = validateLogin();
+            if ($data["valid"]) {
+                include_once('communication.php');
+                doLoginUser($data["values"]);
+                $page = "home";
+            }
+            break;
 
+        case "contact":
+            include_once('contact.php');
+            $data = validateContact();
+            if ($data["valid"]) {
+                $page = "thanks";
+            }
+            break;
+
+        case "logout":
+            doLogoutUser();
+            $page = "home";
+            break;
+
+        case "register":
+            include_once('register.php');
+            $data = validateRegister();
+            if ($data["valid"]) {
+                addAccount($vald_vals_errs["values"]);
+                $page = "home";
+            }
+            break;
+    }
+
+    $data["page"] = $page;
+
+    return $data;
+
+}
 
 function beginDocument() {
     echo '<!doctype html> 
     <html>'; 
 }
 
-function showHeader($page) {
+function showHeader($data) {
     echo "<head><title>";
-
+    
+    $page = $data["page"];
     switch ($page) {
         case "contact":
             include_once('contact.php');
@@ -70,16 +110,17 @@ function showHeader($page) {
     echo '</head>';
 }
 
-function showBody($page) {
+function showBody($data) {
     echo "<body>" . PHP_EOL;
     echo "<h1>Formulierensite</h1>";
-    showNavBar();
-    showContent($page);
+    showNavBar($data);
+    showContent($data);
     showFooter();
     echo "</body>" . PHP_EOL;
 }
 
-function showNavBar() {
+// TODO: incorporate menu into data
+function showNavBar($data) {
     $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
 
     include_once('communication.php');
@@ -99,7 +140,8 @@ function showNavBar() {
     echo '</ul>';
 }
 
-function showContent($page) {
+function showContent($data) {
+    $page = $data["page"];
     switch ($page) {
         case "about":
             include_once('about.php');
@@ -108,7 +150,12 @@ function showContent($page) {
 
         case "contact":
             include_once('contact.php');
-            showContactContent();
+            showContactContent($data);
+            break;
+        
+        case "thanks":
+            include_once('contact.php');
+            showContactThanks($data);
             break;
 
         case "home":

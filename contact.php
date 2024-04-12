@@ -81,7 +81,7 @@ function validateContact() {
             else if (!preg_match('/^[0-9]{4}[A-Z]{2}$/', $values["postalcode"])) {
                 $errors["postalcode"] = "Vul alsjeblieft een geldige Nederlands postcode in."; 
             }
-            
+
             if ($municip_flag) {
                 $errors["municip"] = "Vul alsjeblieft je gemeente in.";
             }
@@ -112,9 +112,9 @@ function showContactEnd() {
     echo '</form>';
 }
 
-function showContactField($fieldName, $label, $type, $vald_vals_errs, $placeholder=NULL, $options=NULL, $optional=true) {
-    $values = $vald_vals_errs["values"];
-    $errors = $vald_vals_errs["errors"];
+function showContactField($fieldName, $label, $type, $data, $placeholder=NULL, $options=NULL, $optional=true) {
+    $values = $data["values"];
+    $errors = $data["errors"];
 
     echo '<div>';
     echo '<label for="' . $fieldName . '">' . $label . ': </label>';
@@ -169,31 +169,24 @@ function showContactField($fieldName, $label, $type, $vald_vals_errs, $placehold
     echo '</div>';
 }
 
-function showContactContent () {
-    $vald_vals_errs = validateContact();
-
-    if (!$vald_vals_errs["valid"]) {
-        showContactStart();
-        showContactField('gender', 'Aanhef', 'select', $vald_vals_errs, NULL, GENDERS);
-        showContactField('name', 'Voor- en achternaam', 'text', $vald_vals_errs, "Marie Jansen", NULL, false);
-        showContactField('email', "Email", "text", $vald_vals_errs, "voorbeeld@mail.com");
-        showContactField('phone', "Telefoonnummer", "tel", $vald_vals_errs, "0612345678");
-        showContactField('street', 'Straatnaam', 'text', $vald_vals_errs, "Lindeweg");
-        showContactField("housenumber", "Huisnummer", "number", $vald_vals_errs, "1");
-        showContactField("additive", "Toevoeging", "text", $vald_vals_errs, "A");
-        showContactField("postalcode", "Postcode", "text", $vald_vals_errs, "1234AB");
-        showContactField("municip", "Gemeente", "text", $vald_vals_errs, "Utrecht");
-        showContactField('comm', 'Communicatie, via', 'radio', $vald_vals_errs, NULL, COMM_PREFS);
-        showContactField('msg', "Uw bericht", "textarea", $vald_vals_errs, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
-        showContactEnd();
-    }
-    else {
-        showContactThanks($vald_vals_errs);
-    }
+function showContactContent ($data) {
+    showContactStart();
+    showContactField('gender', 'Aanhef', 'select', $data, NULL, GENDERS);
+    showContactField('name', 'Voor- en achternaam', 'text', $data, "Marie Jansen", NULL, false);
+    showContactField('email', "Email", "text", $data, "voorbeeld@mail.com");
+    showContactField('phone', "Telefoonnummer", "tel", $data, "0612345678");
+    showContactField('street', 'Straatnaam', 'text', $data, "Lindeweg");
+    showContactField("housenumber", "Huisnummer", "number", $data, "1");
+    showContactField("additive", "Toevoeging", "text", $data, "A");
+    showContactField("postalcode", "Postcode", "text", $data, "1234AB");
+    showContactField("municip", "Gemeente", "text", $data, "Utrecht");
+    showContactField('comm', 'Communicatie, via', 'radio', $data, NULL, COMM_PREFS);
+    showContactField('msg', "Uw bericht", "textarea", $data, "Schrijf hier uw bericht...", ["rows" => 10, "cols" => 60]);
+    showContactEnd();
 } 
         
-function showContactThanks($vald_vals_errs) {
-    $values = $vald_vals_errs["values"];
+function showContactThanks($data) {
+    $values = $data["values"];
 
     echo '<p>Bedankt, ' . $values["name"] . ', voor je reactie:</p>
     <div>Aanhef: ' . $values["gender"] . '</div>
