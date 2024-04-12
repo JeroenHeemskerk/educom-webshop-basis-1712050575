@@ -14,5 +14,5 @@ function showAboutContent() {
         <li>Hardlopen</li>
         <li>Films</li>
     </ul>
-    <p class="content">Bedankt voor het lezen van deze informatie pagina en veel plezier met het invullen van het formulier!</p>';
+    <p class="content">Bedankt voor het lezen van deze informatiepagina en veel plezier met het invullen van het formulier!</p>';
 }

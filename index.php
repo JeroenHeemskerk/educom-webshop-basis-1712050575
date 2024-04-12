@@ -1,5 +1,6 @@
 <?php 
 if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+// var_dump($_POST);
 $page = getRequestedPage();
 showPage($page);
 
@@ -16,7 +17,7 @@ function getRequestedPage() {
 function getGetVar($key, $default="") {  
     $value = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);  
      
-    return isset($value) ? trim($value) : $default;   
+    return isset($value) ? trim($value) : $default;
 }
 
 function getPostVar($key, $default="", $filter=false) { 
@@ -82,14 +83,15 @@ function showNavBar() {
     $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
 
     include_once('communication.php');
-    if (!isUserLoggedIn()) {
+    if (isUserLoggedIn()) {
+        // If user is logged in, display Logout option
+        $menu["logout"] = 'LOGOUT ' . getLoggedInUser();
+    } 
+    else {
+        // If user is not logged in, display Register and Login options
         $menu["register"] = "REGISTER";
         $menu["login"] = "LOGIN";
     }
-    else {
-        $menu["logout"] = 'LOGOUT ' . getLoggedInUser();
-    }
-
     echo '<ul class="navbar">';
     foreach($menu as $page=>$label) {
         echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';

@@ -86,6 +86,6 @@ function showLoginContent() {
     }
     else {
         doLoginUser($vald_vals_errs["values"]);
-        header("Location: index.php?page=home");
+        // header("Location: index.php?page=home");
     }
 }

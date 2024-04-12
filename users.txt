@@ -1,3 +1,5 @@
 [email]|[naam]|[wachtwoord]
-ja@ja.nl|ja|ja
 nee@nee.nl|nee|nee
+ja@ja.nl|ja|ja
+miss@miss.nl|miss|miss
+ewa@ewa.nl|ewa@ewa.nl|ewa
