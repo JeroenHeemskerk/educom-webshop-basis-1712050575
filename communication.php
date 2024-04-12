@@ -27,8 +27,11 @@ function doesEmailExist($email) {
 function authenticateUser($email, $pswd) {
     $users = fopen('users.txt', "r") or die("Unable to open file!");
 
-    while(!feof($users)) {
-        $line = fgets($users);
+    while (($line = fgets($users)) !== false) {
+        // Skip empty lines
+        if (trim($line) == '') {
+            continue;
+        }
 
         $current_credentials = explode("|", $line);
         $current_email = $current_credentials[0];
@@ -38,6 +41,7 @@ function authenticateUser($email, $pswd) {
             return true;
         }
     }
+    
     fclose($users);
     return false;
 }

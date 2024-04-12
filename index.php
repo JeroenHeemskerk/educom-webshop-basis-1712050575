@@ -27,7 +27,6 @@ function getPostVar($key, $default="", $filter=false) {
 }
 
 function processRequest($page) {
-    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
     switch ($page) {
         case "contact":
             include_once('contact.php');
@@ -43,7 +42,6 @@ function processRequest($page) {
             if ($data["valid"]) {
                 include_once('communication.php');
                 doLoginUser($data["values"]);
-                $menu["logout"] = "LOGOUT " . getLoggedInUser();
                 $page = "home";
             }
             break;
@@ -63,9 +61,20 @@ function processRequest($page) {
             }
             break;
     }
-
     $data["page"] = $page;
 
+    // Build the dynamic navigation bar
+    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT");
+    include_once('communication.php');
+    if (isUserLoggedIn()) {
+        $menu["logout"] = 'LOGOUT ' . getLoggedInUser();
+    } 
+    else {
+        $menu["register"] = "REGISTER";
+        $menu["login"] = "LOGIN";
+    }
+
+    $data["menu"] = $menu;
     return $data;
 
 }
@@ -124,17 +133,7 @@ function showBody($data) {
 
 // TODO: incorporate menu into data
 function showNavBar($data) {
-
-    include_once('communication.php');
-    if (isUserLoggedIn()) {
-        // If user is logged in, display Logout option
-        $menu["logout"] = 'LOGOUT ' . getLoggedInUser();
-    } 
-    else {
-        // If user is not logged in, display Register and Login options
-        $menu["register"] = "REGISTER";
-        $menu["login"] = "LOGIN";
-    }
+    $menu = $data["menu"];
     echo '<ul class="navbar">';
     foreach($menu as $page=>$label) {
         echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';
